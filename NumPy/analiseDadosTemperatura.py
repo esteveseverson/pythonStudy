@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 # Gerar 365 temperaturas aleatórias entre 2 e 35 (pesquisei a menor e a maior temperatura de MG em 2024)
 # Tirei cerca de 10% dos valores para fazer a interpolação de dados faltantes
@@ -54,16 +55,52 @@ def polinomialInterpole(randomArray):
     polinomial[np.isnan(polinomial)] = np.polyval(coeficiente_polinomio, indices_nan)
     return polinomial
 
+def temperaturePeaks(randomArray):
+    menorTemperatura = 100
+    maiorTemperatura = 0
+    for x in range (0, len(randomArray), 1):
+        if menorTemperatura > randomArray[x]:
+            menorTemperatura = randomArray[x]
+        if maiorTemperatura < randomArray[x]:
+            maiorTemperatura = randomArray[x]
+    
+    return menorTemperatura, maiorTemperatura
+
+def dataView(array, interp, polinomial):
+    # x = numero de dados
+    x = np.arange(366)
+    
+    # dados do grafico
+    plt.figure(figsize=(17, 10))
+    plt.plot(x, array, label="Array Original", color="blue", marker="o")
+    plt.plot(x, interp, label="Interp. Linear", color="green")
+    plt.plot(x, polinomial, label="Interp. Polinomial", color="red")
+
+    # titulos e rótulos
+    plt.title("Gráficos de temperaturas durante 365 dias")
+    plt.xlabel("Dias")
+    plt.ylabel("Temperatura (°C)")
+
+    # grade e legenda
+    plt.grid(True)
+    plt.legend()
+
+    plt.show()
 
 arrayTemperature = gerarTemperaturasAleatorias()
 linearInterpTemperature = linearInterpole(arrayTemperature)
 polinomialInterpTemperature = polinomialInterpole(arrayTemperature)
-print(arrayTemperature, "\n")
-print(linearInterpTemperature, "\n")
-print(polinomialInterpTemperature, "\n")
+
+arrayLowestPeak, arrayHighestPeak = temperaturePeaks(arrayTemperature)
+linearLowestPeak, linearHighestPeak = temperaturePeaks(linearInterpTemperature)
+polinomialLowestPeak, polinomialHighestPeak = temperaturePeaks(polinomialInterpTemperature)
 
 printStatistical(arrayTemperature)
 printStatistical(linearInterpTemperature)
 printStatistical(polinomialInterpTemperature)
 
+print(arrayLowestPeak, arrayHighestPeak)
+print(linearLowestPeak, linearHighestPeak)
+print(polinomialLowestPeak, polinomialHighestPeak)
 
+dataView(arrayTemperature, linearInterpTemperature, polinomialInterpTemperature)
