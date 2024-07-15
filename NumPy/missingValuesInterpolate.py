@@ -5,10 +5,17 @@ import matplotlib.pyplot as plt
 x = np.linspace(0, 20, num=21)
 y = np.sin(x)
 
+print(x)
+print(y)
+
 # Introduzir valores faltantes
+y[1] = np.nan
 y[3] = np.nan
 y[6] = np.nan
 y[8] = np.nan
+y[11] = np.nan
+y[16] = np.nan
+y[18] = np.nan
 
 print("Dados originais com valores faltantes:")
 print(y)

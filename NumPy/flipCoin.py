@@ -46,4 +46,12 @@ def percentageCalc(vet):
 
 # Gera o array e calcula a porcentagem
 vet = randomArrayGen()
+contCara, contCoroa = 0, 0
+for i in vet:
+    if i == 0:
+        contCara += 1
+    elif i == 1:
+        contCoroa += 1
+
+print(f"O lado cara foi sorteado {contCara} vezes\nO lado coroa foi sorteado {contCoroa} vezes")
 percentageCalc(vet)

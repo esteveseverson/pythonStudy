@@ -9,4 +9,4 @@ def statisticalCalc(randomList):
 randomList = randomListGen()
 statOps = statisticalCalc(randomList)
 print(randomList)
-print(f"A média é {statOps[0]}\nA mediana é {statOps[1]}\nO desvio padrão(sqrt(var)) é {round(statOps[2], 2)}\nE a variância foi {round(statOps[3], 2)}")
+print(f"A média é {round(statOps[0], 2)}\nA mediana é {statOps[1]}\nO desvio padrão é {round(statOps[2], 2)}\nE a variância foi {round(statOps[3], 2)}")
