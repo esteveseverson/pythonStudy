@@ -102,6 +102,51 @@ def pergunta7(df):
     print(f'\tNúmero de vendas elegíveis ao desconto de 15%: {elegivel_desconto.shape[0]}\n')
     print(elegivel_desconto.head())
 
+def pergunta8(df):
+    media_geral = df['Valor_Venda'].mean()
+    
+    media_desconto_15 = df.assign(
+        Valor_Desconto = lambda x: x['Valor_Venda'].apply(lambda valor: valor * 0.85 if valor > 1000 else valor)
+    )['Valor_Desconto'].mean()
+    
+    media_desconto_total = df.assign(
+        Valor_Desconto = lambda x: x['Valor_Venda'].apply(lambda valor: valor * 0.85 if valor > 1000 else valor * 0.9)
+    )['Valor_Desconto'].mean()
+
+    print(f'Media de valores de venda originais: {round(media_geral, 2)}\nMedia de valores com descontos de 15%: {round(media_desconto_15, 2)}\nMedia de valores com todos descontos: {round(media_desconto_total, 2)}')
+
+def pergunta9(df):
+    df['Data_Pedido'] = pd.to_datetime(df['Data_Pedido'], format='%d/%m/%Y')
+
+    agrupamento_mes_ano_segmento = (
+        df
+        .assign(
+            Ano = lambda x: x['Data_Pedido'].dt.year,
+            Mes = lambda x: x['Data_Pedido'].dt.month
+        )  
+        .groupby(['Ano', 'Mes', 'Segmento'])['Valor_Venda']
+        .sum()
+        .reset_index()
+    )
+
+    agrupamento_mes_ano_segmento['Ano_Mes'] = pd.to_datetime(agrupamento_mes_ano_segmento[['Ano', 'Mes']].rename(columns={'Ano': 'year', 'Mes': 'month'}).assign(Day=1))
+
+    plt.figure(figsize=(14, 8))
+
+    for segmento in agrupamento_mes_ano_segmento['Segmento'].unique():
+        dados_segmento = agrupamento_mes_ano_segmento[agrupamento_mes_ano_segmento['Segmento'] == segmento]
+        plt.plot(dados_segmento['Ano_Mes'], dados_segmento['Valor_Venda'], marker='o', label=segmento)
+
+    plt.title('Total de Vendas por Ano, Mês e Segmento')
+    plt.xlabel('Ano e Mes')
+    plt.ylabel('Total de Vendas ($)')
+    plt.legend(title='Segmento')
+    plt.grid(True)
+    plt.xticks(rotation=45)
+
+    plt.tight_layout()
+    plt.show()
+
 #df = pd.read_csv('dataset.csv')
 data = pd.read_csv('dataset.csv')
 '''
@@ -117,4 +162,6 @@ print(df.isnull().sum())
 # pergunta4(data)
 # pergunta5(data)
 # pergunta6(data)
-pergunta7(data)
+# pergunta7(data)
+# pergunta8(data)
+pergunta9(data)
