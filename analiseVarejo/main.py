@@ -63,6 +63,24 @@ def pergunta4(df):
 
     plt.show()
 
+def pergunta5(df):
+    #dividindo o agrupamento e ordenando para melhor vizualização
+    agrupamento = df.groupby('Segmento')['Valor_Venda'].sum().reset_index()
+    pie = agrupamento.sort_values(by='Valor_Venda', ascending=False).head(3)
+    
+    # variaveis do grafico
+    labels = pie['Segmento']
+    sizes = pie['Valor_Venda']
+    colors = ['gold', 'yellowgreen', 'lightcoral']
+    explode = (0, 0.1, 0)
+
+    # construindo grafico
+    plt.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, startangle=90)
+    plt.axis('equal')
+    plt.title('Venda por segmento')
+
+    plt.show()   
+
 #df = pd.read_csv('dataset.csv')
 data = pd.read_csv('dataset.csv')
 '''
@@ -75,4 +93,5 @@ print(df.isnull().sum())
 # pergunta1(data)
 # pergunta2(data)
 # pergunta3(data)
-pergunta4(data)
+# pergunta4(data)
+pergunta5(data)
