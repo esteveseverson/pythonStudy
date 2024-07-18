@@ -72,7 +72,7 @@ def pergunta5(df):
     labels = pie['Segmento']
     sizes = pie['Valor_Venda']
     colors = ['gold', 'yellowgreen', 'lightcoral']
-    explode = (0, 0.1, 0)
+    explode = (0.1, 0, 0)
 
     # construindo grafico
     plt.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%', shadow=True, startangle=90)
@@ -80,6 +80,22 @@ def pergunta5(df):
     plt.title('Venda por segmento')
 
     plt.show()   
+
+def pergunta6(df):
+    #determina o formato para dia mes e ano
+    df['Data_Pedido'] = pd.to_datetime(df['Data_Pedido'], format='%d/%m/%Y')
+
+    # usa a função assign pra recortar apenas o ano para fazer o groupby somando a venda
+    agrupamento = (
+        df
+        .assign(Ano= lambda x: x['Data_Pedido'].dt.year)
+        .groupby(['Ano', 'Segmento'])['Valor_Venda']
+        .sum()
+        .reset_index()
+    )
+
+    print("Resposta da pergunta 6:")
+    print(agrupamento.head(9))
 
 #df = pd.read_csv('dataset.csv')
 data = pd.read_csv('dataset.csv')
@@ -94,4 +110,5 @@ print(df.isnull().sum())
 # pergunta2(data)
 # pergunta3(data)
 # pergunta4(data)
-pergunta5(data)
+# pergunta5(data)
+pergunta6(data)
