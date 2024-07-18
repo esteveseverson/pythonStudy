@@ -97,6 +97,11 @@ def pergunta6(df):
     print("Resposta da pergunta 6:")
     print(agrupamento.head(9))
 
+def pergunta7(df):
+    elegivel_desconto = df.query('Valor_Venda > 1000')
+    print(f'\tNúmero de vendas elegíveis ao desconto de 15%: {elegivel_desconto.shape[0]}\n')
+    print(elegivel_desconto.head())
+
 #df = pd.read_csv('dataset.csv')
 data = pd.read_csv('dataset.csv')
 '''
@@ -111,4 +116,5 @@ print(df.isnull().sum())
 # pergunta3(data)
 # pergunta4(data)
 # pergunta5(data)
-pergunta6(data)
+# pergunta6(data)
+pergunta7(data)
