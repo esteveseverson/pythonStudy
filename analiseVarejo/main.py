@@ -5,9 +5,9 @@ import seaborn as sns
 import datetime as dt
 
 # Pergunta de Negócio 1: Qual Cidade com Maior Valor de Venda de Produtos da Categoria 'Office Supplies'?  
-def pergunta1(df):
+def pergunta1(df1):
     #filtrando coluna
-    dfCategory = df[df['Categoria'] == 'Office Supplies']
+    dfCategory = df1[df1['Categoria'] == 'Office Supplies']
     
     #somando coluna e procura o indice do maior valor
     agrupamento = dfCategory.groupby('Cidade')['Valor_Venda'].sum().reset_index()
@@ -17,10 +17,10 @@ def pergunta1(df):
 
 # Pergunta de Negócio 2: Qual o Total de Vendas Por Data do Pedido?
 # Demonstre o resultado através de um gráfico de barras.
-def pergunta2(df):
+def pergunta2(df2):
     #filtrando dados
-    df['Data_Pedido'] = pd.to_datetime(df['Data_Pedido'], format='%d/%m/%Y')
-    agrupamento = df.groupby('Data_Pedido')['Valor_Venda'].sum().reset_index()
+    df2['Data_Pedido'] = pd.to_datetime(df2['Data_Pedido'], format='%d/%m/%Y')
+    agrupamento = df2.groupby('Data_Pedido')['Valor_Venda'].sum().reset_index()
 
     #plotando dados
     plt.figure(figsize=(12, 8))
@@ -36,9 +36,9 @@ def pergunta2(df):
 
 # Pergunta de Negócio 3: Qual o Total de Vendas por Estado?
 # Demonstre o resultado através de um gráfico de barras.
-def pergunta3(df):
+def pergunta3(df3):
     #filtra os dados
-    agrupamento = df.groupby('Estado')['Valor_Venda'].sum().reset_index()
+    agrupamento = df3.groupby('Estado')['Valor_Venda'].sum().reset_index()
 
     #plota os dados
     plt.figure(figsize=(18, 5))
@@ -53,9 +53,9 @@ def pergunta3(df):
     plt.show()
 
 #Pergunta de Negócio 4: Quais São as 10 Cidades com Maior Total de Vendas?
-def pergunta4(df):
+def pergunta4(df4):
     #selecionando o agrupamento e selecionando os 10 maiores [ordenando e usando os 10 primerios]
-    agrupamento = df.groupby('Cidade')['Valor_Venda'].sum().reset_index()
+    agrupamento = df4.groupby('Cidade')['Valor_Venda'].sum().reset_index()
     maiores_vendas = agrupamento.sort_values(by='Valor_Venda', ascending=False).head(10)
 
     #plotando o grafico de barras
@@ -71,9 +71,9 @@ def pergunta4(df):
 
 # Pergunta de Negócio 5: Qual Segmento Teve o Maior Total de Vendas?
 # Demonstre o resultado através de um gráfico de pizza.
-def pergunta5(df):
+def pergunta5(df5):
     #dividindo o agrupamento e ordenando para melhor vizualização
-    agrupamento = df.groupby('Segmento')['Valor_Venda'].sum().reset_index()
+    agrupamento = df5.groupby('Segmento')['Valor_Venda'].sum().reset_index()
     pie = agrupamento.sort_values(by='Valor_Venda', ascending=False).head(3)
     
     # variaveis do grafico
@@ -90,13 +90,13 @@ def pergunta5(df):
     plt.show()   
 
 # Pergunta de Negócio 6 (Desafio Nível Baby): Qual o Total de Vendas Por Segmento e Por Ano?
-def pergunta6(df):
+def pergunta6(df6):
     #determina o formato para dia mes e ano
-    df['Data_Pedido'] = pd.to_datetime(df['Data_Pedido'], format='%d/%m/%Y')
+    df6['Data_Pedido'] = pd.to_datetime(df6['Data_Pedido'], format='%d/%m/%Y')
 
     # usa a função assign para criar uma coluna apenas em tempo de execução e capturar seus valores
     agrupamento = (
-        df
+        df6
         .assign(Ano= lambda x: x['Data_Pedido'].dt.year)
         .groupby(['Ano', 'Segmento'])['Valor_Venda']
         .sum()
@@ -110,40 +110,41 @@ def pergunta6(df):
 # Se o Valor_Venda for maior que 1000 recebe 15% de desconto.
 # Se o Valor_Venda for menor que 1000 recebe 10% de desconto.
 # Quantas Vendas Receberiam 15% de Desconto?
-def pergunta7(df):
+def pergunta7(df7):
     #query para verificar se o valor é maior que 1000
-    elegivel_desconto = df.query('Valor_Venda > 1000')
+    elegivel_desconto = df7.query('Valor_Venda > 1000')
     
     #usando função shape para contar quantas linhas tem o valor > 1000
     print(f'\tNúmero de vendas elegíveis ao desconto de 15%: {elegivel_desconto.shape[0]}\n')
     print(elegivel_desconto.head())
 
 #Pergunta de Negócio 8 (Desafio Nível Master): Considere Que a Empresa Decida Conceder o Desconto de 15% do Item Anterior. Qual Seria a Média do Valor de Venda Antes e Depois do Desconto?
-def pergunta8(df):
+def pergunta8(df8):
     #calculo da média geral
-    media_geral = df['Valor_Venda'].mean()
+    print(df8.describe())
+    media_geral = df8['Valor_Venda'].mean()
     
     #calculo da media dando 15% de desconto em vendas com valor > 1000
-    media_desconto_15 = df.assign(
-        Valor_Desconto = lambda x: x['Valor_Venda'].apply(lambda valor: valor * 0.85 if valor > 1000 else valor)
+    media_desconto_15 = df8.assign(
+        Valor_Desconto = lambda x: x['Valor_Venda'].apply(lambda valor: (valor * 0.85) if valor > 1000 else valor)
     )['Valor_Desconto'].mean()
     
     #calculo da media dando 15% de desconto em vendas com valor > 1000 e desconto de 10% em vendas com valor < 1000
-    media_desconto_total = df.assign(
-        Valor_Desconto = lambda x: x['Valor_Venda'].apply(lambda valor: valor * 0.85 if valor > 1000 else valor * 0.9)
+    media_desconto_total = df8.assign(
+        Valor_Desconto = lambda x: x['Valor_Venda'].apply(lambda valor: (valor * 0.85) if valor > 1000 else (valor * 0.9))
     )['Valor_Desconto'].mean()
 
     print(f'Media de valores de venda originais: {round(media_geral, 2)}\nMedia de valores com descontos de 15%: {round(media_desconto_15, 2)}\nMedia de valores com todos descontos: {round(media_desconto_total, 2)}')
 
 # Pergunta de Negócio 9 (Desafio Nível Master Ninja): Qual o Média de Vendas Por Segmento, Por Ano e Por Mês?
 # Demonstre o resultado através de gráfico de linha.
-def pergunta9(df):
+def pergunta9(df9):
     #usa o datetime para formatar a data
-    df['Data_Pedido'] = pd.to_datetime(df['Data_Pedido'], format='%d/%m/%Y')
+    df9['Data_Pedido'] = pd.to_datetime(df9['Data_Pedido'], format='%d/%m/%Y')
 
     #faz o agrupamento usando o mes e o ano, e em sequencia soma o valor total do agrupamento
     agrupamento_mes_ano_segmento = (
-        df
+        df9
         .assign(
             Ano = lambda x: x['Data_Pedido'].dt.year,
             Mes = lambda x: x['Data_Pedido'].dt.month
@@ -177,10 +178,10 @@ def pergunta9(df):
 
 # Pergunta de Negócio 10 (Desafio Nível Master Ninja das Galáxias): Qual o Total de Vendas Por Categoria e SubCategoria, Considerando Somente as Top 12 SubCategorias?
 # Demonstre tudo através de um único gráfico.
-def pergunta10(df):
+def pergunta10(df10):
     
     # fazendo agrupamento com categoria e sub categoria, e somando o valor total
-    agrupamento = df.groupby(['Categoria', 'SubCategoria'])['Valor_Venda'].sum().reset_index()
+    agrupamento = df10.groupby(['Categoria', 'SubCategoria'])['Valor_Venda'].sum().reset_index()
     # ordenando em ordem decrescente e pegando os 10 primerios valores
     maiores_vendas = agrupamento.sort_values(by='Valor_Venda', ascending=False).head(12)
 
